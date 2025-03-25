@@ -1,4 +1,0 @@
-api_platform:
-    resource: .
-    type: api_platform
-    trailing_slash_on_root: false
