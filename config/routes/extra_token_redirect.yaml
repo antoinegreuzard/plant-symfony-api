@@ -1,0 +1,8 @@
+api_token_with_slash:
+    path: /api/token/
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        path: /api/token
+        permanent: false
+        keepRequestMethod: true
+    methods: [POST]
