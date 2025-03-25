@@ -24,7 +24,7 @@ class PlantFixtures extends Fixture
         $sunlights = Plant::SUNLIGHT_CHOICES;
         $humidities = Plant::HUMIDITY_CHOICES;
 
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             $plant = new Plant();
             $plant->setName("Plante $i")
                 ->setVariety("Variété $i")
