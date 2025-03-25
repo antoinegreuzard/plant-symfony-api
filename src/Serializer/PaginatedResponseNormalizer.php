@@ -3,6 +3,7 @@
 namespace App\Serializer;
 
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ApiResource\Error;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -73,6 +74,10 @@ readonly class PaginatedResponseNormalizer implements NormalizerInterface
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
+        if ($data instanceof Error) {
+            return false;
+        }
+        
         return $format === 'json' && $data instanceof PaginatorInterface;
     }
 

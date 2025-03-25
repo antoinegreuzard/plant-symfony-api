@@ -52,7 +52,7 @@ class PlantFixtures extends Fixture
 
             // Copie une image dummy (à créer si besoin)
             $filesystem = new Filesystem();
-            $targetDir = $this->kernel->getProjectDir().'/public/uploads/plant_photos';
+            $targetDir = $this->kernel->getProjectDir().'/public/storage/plant_photos';
             $filesystem->mkdir($targetDir);
 
             $dummyImage = __DIR__.'/dummy.jpg';
@@ -66,6 +66,7 @@ class PlantFixtures extends Fixture
             $plant->addPhoto($photo);
 
             $manager->persist($plant);
+            $manager->persist($photo);
         }
 
         $manager->flush();

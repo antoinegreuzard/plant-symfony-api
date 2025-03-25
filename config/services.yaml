@@ -24,6 +24,8 @@ services:
         arguments:
             - '@App\State\PlantStateProvider.inner'
             - '@App\Service\PlantAdviceService'
+    App\State\PlantPhotoProvider:
+        tags: ['api_platform.state_provider']
     App\Serializer\PaginatedResponseNormalizer:
         arguments:
             $decorated: '@serializer.normalizer.object'
@@ -35,6 +37,11 @@ services:
             $normalizer: '@serializer.normalizer.object'
         tags:
             - { name: 'serializer.normalizer', priority: 10 }
+    App\Serializer\PlantPhotoNormalizer:
+        arguments:
+            $normalizer: '@serializer.normalizer.object'
+        tags:
+            - { name: 'serializer.normalizer', priority: 100 }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

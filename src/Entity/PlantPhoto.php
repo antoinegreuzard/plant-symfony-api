@@ -3,20 +3,36 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\Repository\PlantPhotoRepository;
+use App\State\PlantPhotoProvider;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-
 #[ApiResource(
+    operations: [
+        new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/plants/{plantId}/photos',
+            uriVariables: [
+                'plantId' => new Link(
+                    fromProperty: 'photos',
+                    fromClass: Plant::class
+                ),
+            ],
+            normalizationContext: ['groups' => ['photo:read']],
+            provider: PlantPhotoProvider::class
+        ),
+    ],
     normalizationContext: ['groups' => ['photo:read']],
-    denormalizationContext: ['groups' => ['photo:write']]
+    denormalizationContext: ['groups' => ['photo:write']],
+    paginationEnabled: false,
 )]
 #[ORM\Entity(repositoryClass: PlantPhotoRepository::class)]
 #[ORM\Table(name: 'plant_photo')]
@@ -42,23 +58,11 @@ class PlantPhoto
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $caption = null;
 
-    #[Groups(['photo:read'])]
     #[ORM\Column(type: 'datetime')]
-    private ?DateTimeInterface $uploadedAt = null {
-        get {
-            return $this->uploadedAt;
-        }
-        set {
-            $this->uploadedAt = new DateTimeImmutable();
-        }
-    }
+    private ?DateTimeInterface $uploadedAt = null;
 
     #[Vich\UploadableField(mapping: 'plant_photos', fileNameProperty: 'image')]
     private ?File $imageFile = null;
-
-    public function __construct(private readonly RequestStack $requestStack)
-    {
-    }
 
     public function __toString(): string
     {
@@ -69,7 +73,6 @@ class PlantPhoto
         );
     }
 
-    #[Groups(['photo:read'])]
     public function getPlantId(): ?int
     {
         return $this->plant?->getId();
@@ -83,12 +86,16 @@ class PlantPhoto
 
     #[Groups(['photo:read'])]
     #[SerializedName('image')]
-    public function getImageUrl(): ?string
+    public function getImage(): ?string
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $baseUrl = $request ? $request->getSchemeAndHttpHost() : '';
+        return $this->image;
+    }
 
-        return $this->image ? $baseUrl.'/storage/plant_photos/'.$this->image : null;
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
     }
 
     public function getPlant(): ?Plant
@@ -99,18 +106,6 @@ class PlantPhoto
     public function setPlant(?Plant $plant): static
     {
         $this->plant = $plant;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(?string $image): static
-    {
-        $this->image = $image;
 
         return $this;
     }
@@ -149,5 +144,10 @@ class PlantPhoto
         }
 
         return $this;
+    }
+
+    public function getUploadedAt(): ?DateTimeInterface
+    {
+        return $this->uploadedAt;
     }
 }

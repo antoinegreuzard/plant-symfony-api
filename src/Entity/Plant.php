@@ -76,16 +76,18 @@ class Plant
     private ?float $temperature = null;
     #[ORM\Column(length: 10)]
     private string $humidityLevel = 'medium';
-    #[ORM\OneToMany(targetEntity: PlantPhoto::class, mappedBy: 'plant', cascade: ['persist'], orphanRemoval: true)]
-    private Collection $photos {
-        get {
-            return $this->photos;
-        }
-    }
+    #[Groups(['plant:read'])]
+    #[ORM\OneToMany(targetEntity: PlantPhoto::class, mappedBy: 'plant')]
+    private Collection $photos;
 
     public function __construct()
     {
         $this->photos = new ArrayCollection();
+    }
+
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
     }
 
     #[ORM\PrePersist]
