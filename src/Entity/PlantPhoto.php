@@ -25,11 +25,7 @@ class PlantPhoto
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null {
-        get {
-            return $this->id;
-        }
-    }
+    private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Plant::class, inversedBy: 'photos')]
     #[ORM\JoinColumn(nullable: false)]
@@ -66,8 +62,12 @@ class PlantPhoto
         );
     }
 
-    // Getters / Setters
-
+    #[Groups(['plant:read'])]
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    
     public function getPlant(): ?Plant
     {
         return $this->plant;

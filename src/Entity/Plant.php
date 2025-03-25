@@ -17,7 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     normalizationContext: ['groups' => ['plant:read']],
-    denormalizationContext: ['groups' => ['plant:write']]
+    denormalizationContext: ['groups' => ['plant:write']],
+    paginationEnabled: true,
+    paginationItemsPerPage: 10
 )]
 #[ORM\Entity(repositoryClass: PlantRepository::class)]
 #[ORM\Table(name: 'plant')]
@@ -28,23 +30,12 @@ class Plant
     public const array SUNLIGHT_CHOICES = ['low', 'medium', 'high'];
     public const array HUMIDITY_CHOICES = ['low', 'medium', 'high'];
     #[Groups(['plant:read'])]
-    public array $advice = [] {
-        get {
-            return $this->advice;
-        }
-        set {
-            $this->advice = $value;
-        }
-    }
+    public array $advice = [];
     #[Groups(['plant:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null {
-        get {
-            return $this->id;
-        }
-    }
+    private ?int $id = null;
     #[Assert\Length(min: 3, minMessage: "Le nom doit contenir au moins 3 caractères.")]
     #[Groups(['plant:read', 'plant:write'])]
     #[ORM\Column(length: 255, unique: true)]
@@ -62,11 +53,7 @@ class Plant
     private ?string $description = null;
     #[Groups(['plant:read'])]
     #[ORM\Column(type: 'datetime')]
-    private ?DateTimeInterface $createdAt = null {
-        get {
-            return $this->createdAt;
-        }
-    }
+    private ?DateTimeInterface $createdAt = null;
     #[ORM\Column(type: 'integer')]
     private int $wateringFrequency = 7;
     #[ORM\Column(type: 'integer')]
@@ -112,6 +99,11 @@ class Plant
         return $this->name ?? '';
     }
 
+    public function getCreatedAt(): ?DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
     #[Groups(['plant:read'])]
     #[ApiProperty(readable: true)]
     public function getNextWatering(): ?DateTimeInterface
@@ -135,6 +127,12 @@ class Plant
     public function getNextPruning(): ?DateTimeInterface
     {
         return $this->lastPruning?->add(new DateInterval("P{$this->pruningFrequency}D"));
+    }
+
+    #[Groups(['plant:read'])]
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getName(): ?string

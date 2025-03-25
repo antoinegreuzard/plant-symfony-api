@@ -20,10 +20,21 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
     App\State\PlantStateProvider:
-            decorates: 'api_platform.doctrine.orm.state.item_provider'
-            arguments:
-                - '@App\State\PlantStateProvider.inner'
-                - '@App\Service\PlantAdviceService'
+        decorates: 'api_platform.doctrine.orm.state.item_provider'
+        arguments:
+            - '@App\State\PlantStateProvider.inner'
+            - '@App\Service\PlantAdviceService'
+    App\Serializer\PaginatedResponseNormalizer:
+        arguments:
+            $decorated: '@serializer.normalizer.object'
+        tags:
+            - { name: 'serializer.normalizer', priority: -100 }
+    Symfony\Component\Serializer\Normalizer\DateTimeNormalizer: ~
+    App\Serializer\SnakeCaseNormalizer:
+        arguments:
+            $normalizer: '@serializer.normalizer.object'
+        tags:
+            - { name: 'serializer.normalizer', priority: 10 }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
