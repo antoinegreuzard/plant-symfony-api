@@ -45,6 +45,8 @@ services:
     App\Security\AuthenticationSuccessHandler:
             tags:
                 - { name: 'kernel.event_listener', event: lexik_jwt_authentication.on_authentication_success, method: __invoke }
+    App\DataPersister\PlantPhotoDataPersister:
+            tags: [ 'api_platform.state_processor' ]
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
 use App\Repository\PlantPhotoRepository;
 use App\State\PlantPhotoProvider;
 use DateTimeImmutable;
@@ -28,6 +29,30 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ],
             normalizationContext: ['groups' => ['photo:read']],
             provider: PlantPhotoProvider::class
+        ),
+        new Post(
+            uriTemplate: '/plants/{plantId}/upload-photo',
+            inputFormats: ['multipart' => ['multipart/form-data']],
+            uriVariables: [
+                'plantId' => new Link(
+                    fromProperty: 'photos',
+                    fromClass: Plant::class
+                ),
+            ],
+            normalizationContext: ['groups' => ['photo:read']],
+            denormalizationContext: ['groups' => ['photo:write']],
+        ),
+        new Post(
+            uriTemplate: '/plants/{plantId}/upload-photo/',
+            inputFormats: ['multipart' => ['multipart/form-data']],
+            uriVariables: [
+                'plantId' => new Link(
+                    fromProperty: 'photos',
+                    fromClass: Plant::class
+                ),
+            ],
+            normalizationContext: ['groups' => ['photo:read']],
+            denormalizationContext: ['groups' => ['photo:write']],
         ),
     ],
     normalizationContext: ['groups' => ['photo:read']],
