@@ -8,8 +8,11 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ApiResource(
     normalizationContext: ['groups' => ['photo:read']],
@@ -53,6 +56,10 @@ class PlantPhoto
     #[Vich\UploadableField(mapping: 'plant_photos', fileNameProperty: 'image')]
     private ?File $imageFile = null;
 
+    public function __construct(private readonly RequestStack $requestStack)
+    {
+    }
+
     public function __toString(): string
     {
         return sprintf(
@@ -62,12 +69,28 @@ class PlantPhoto
         );
     }
 
+    #[Groups(['photo:read'])]
+    public function getPlantId(): ?int
+    {
+        return $this->plant?->getId();
+    }
+
     #[Groups(['plant:read'])]
     public function getId(): ?int
     {
         return $this->id;
     }
-    
+
+    #[Groups(['photo:read'])]
+    #[SerializedName('image')]
+    public function getImageUrl(): ?string
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $baseUrl = $request ? $request->getSchemeAndHttpHost() : '';
+
+        return $this->image ? $baseUrl.'/storage/plant_photos/'.$this->image : null;
+    }
+
     public function getPlant(): ?Plant
     {
         return $this->plant;
