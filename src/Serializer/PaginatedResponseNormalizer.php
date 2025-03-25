@@ -21,7 +21,7 @@ readonly class PaginatedResponseNormalizer implements NormalizerInterface
         $context['already_called'] = true;
 
         $normalized = $this->decorated->normalize($data, $format, $context);
-        
+
         if (
             !isset($context['operation']) ||
             !$context['operation'] instanceof Operation ||
@@ -45,20 +45,27 @@ readonly class PaginatedResponseNormalizer implements NormalizerInterface
     private function getNextPageUrl(PaginatorInterface $paginator, array $context): ?string
     {
         if ($paginator->getCurrentPage() < $paginator->getLastPage()) {
-            $uri = $context['request_uri'] ?? '';
-
-            return preg_replace('/page=\d+/', 'page='.($paginator->getCurrentPage() + 1), $uri);
+            return $this->buildPageUrl($paginator->getCurrentPage() + 1, $context);
         }
 
         return null;
     }
 
+    private function buildPageUrl(int $page, array $context): string
+    {
+        $uri = $context['request_uri'] ?? '';
+        $separator = str_contains($uri, '?') ? '&' : '?';
+
+        // Supprime une éventuelle page=X existante
+        $uri = preg_replace('/[?&]page=\d+/', '', $uri);
+
+        return $uri.$separator.'page='.$page;
+    }
+
     private function getPreviousPageUrl(PaginatorInterface $paginator, array $context): ?string
     {
         if ($paginator->getCurrentPage() > 1) {
-            $uri = $context['request_uri'] ?? '';
-
-            return preg_replace('/page=\d+/', 'page='.($paginator->getCurrentPage() - 1), $uri);
+            return $this->buildPageUrl($paginator->getCurrentPage() - 1, $context);
         }
 
         return null;
