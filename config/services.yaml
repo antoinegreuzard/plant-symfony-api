@@ -19,6 +19,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\State\PlantStateProvider:
+            decorates: 'api_platform.doctrine.orm.state.item_provider'
+            arguments:
+                - '@App\State\PlantStateProvider.inner'
+                - '@App\Service\PlantAdviceService'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

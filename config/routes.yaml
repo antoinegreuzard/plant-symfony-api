@@ -3,3 +3,43 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+plant_list:
+    path: /plants
+    controller: App\Controller\PlantController::list
+    methods: [GET]
+
+plant_create:
+    path: /plants
+    controller: App\Controller\PlantController::create
+    methods: [POST]
+
+plant_detail:
+    path: /plants/{id}
+    controller: App\Controller\PlantController::detail
+    methods: [GET]
+
+plant_update:
+    path: /plants/{id}
+    controller: App\Controller\PlantController::update
+    methods: [PUT, PATCH]
+
+plant_delete:
+    path: /plants/{id}
+    controller: App\Controller\PlantController::delete
+    methods: [DELETE]
+
+plant_upload_photo:
+    path: /plants/{id}/upload-photo
+    controller: App\Controller\PlantPhotoController::upload
+    methods: [POST]
+
+plant_photos_list:
+    path: /plants/{id}/photos
+    controller: App\Controller\PlantPhotoController::list
+    methods: [GET]
+
+api_token_refresh:
+    path: /api/token/refresh
+    controller: gesdinet.jwtrefreshtoken::refresh
+    methods: [POST]
