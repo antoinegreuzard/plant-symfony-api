@@ -33,7 +33,7 @@ readonly class PaginatedResponseNormalizer implements NormalizerInterface
         }
 
         return [
-            'count' => $data->getTotalItems(),
+            'count' => (int)$data->getTotalItems(),
             'next' => $this->getNextPageUrl($data, $context),
             'previous' => $this->getPreviousPageUrl($data, $context),
             'results' => array_map(
@@ -46,7 +46,7 @@ readonly class PaginatedResponseNormalizer implements NormalizerInterface
     private function getNextPageUrl(PaginatorInterface $paginator, array $context): ?string
     {
         if ($paginator->getCurrentPage() < $paginator->getLastPage()) {
-            return $this->buildPageUrl($paginator->getCurrentPage() + 1, $context);
+            return $this->buildPageUrl((int)$paginator->getCurrentPage() + 1, $context);
         }
 
         return null;
@@ -55,10 +55,11 @@ readonly class PaginatedResponseNormalizer implements NormalizerInterface
     private function buildPageUrl(int $page, array $context): string
     {
         $uri = $context['request_uri'] ?? '';
-        $separator = str_contains($uri, '?') ? '&' : '?';
 
-        // Supprime une éventuelle page=X existante
         $uri = preg_replace('/[?&]page=\d+/', '', $uri);
+
+        // Vérifie la présence de ? après nettoyage
+        $separator = str_contains($uri, '?') ? '&' : '?';
 
         return $uri.$separator.'page='.$page;
     }
@@ -77,7 +78,7 @@ readonly class PaginatedResponseNormalizer implements NormalizerInterface
         if ($data instanceof Error) {
             return false;
         }
-        
+
         return $format === 'json' && $data instanceof PaginatorInterface;
     }
 
