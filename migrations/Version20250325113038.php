@@ -7,37 +7,38 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 final class Version20250325113038 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Add username column to user table and make email nullable';
     }
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TEMPORARY TABLE __temp__user AS SELECT id, email, roles, password FROM user');
-        $this->addSql('DROP TABLE user');
-        $this->addSql('CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email VARCHAR(180) DEFAULT NULL, roles CLOB NOT NULL --(DC2Type:json)
-        , password VARCHAR(255) NOT NULL, username VARCHAR(180) NOT NULL)');
-        $this->addSql('INSERT INTO user (id, email, roles, password) SELECT id, email, roles, password FROM __temp__user');
-        $this->addSql('DROP TABLE __temp__user');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_IDENTIFIER_USERNAME ON user (username)');
+        $userTable = $schema->getTable('user');
+
+        // Rendre l'email nullable
+        $userTable->getColumn('email')->setNotnull(false);
+
+        // Ajouter la colonne username
+        $userTable->addColumn('username', 'string', ['length' => 180, 'notnull' => true]);
+
+        // Ajouter un index unique sur username
+        $userTable->addUniqueIndex(['username'], 'UNIQ_IDENTIFIER_USERNAME');
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TEMPORARY TABLE __temp__user AS SELECT id, email, roles, password FROM user');
-        $this->addSql('DROP TABLE user');
-        $this->addSql('CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles CLOB NOT NULL --(DC2Type:json)
-        , password VARCHAR(255) NOT NULL)');
-        $this->addSql('INSERT INTO user (id, email, roles, password) SELECT id, email, roles, password FROM __temp__user');
-        $this->addSql('DROP TABLE __temp__user');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_IDENTIFIER_EMAIL ON user (email)');
+        $userTable = $schema->getTable('user');
+
+        // Supprimer l'index unique sur username
+        $userTable->dropIndex('UNIQ_IDENTIFIER_USERNAME');
+
+        // Supprimer la colonne username
+        $userTable->dropColumn('username');
+
+        // Remettre email non-nullable
+        $userTable->getColumn('email')->setNotnull(true);
     }
 }

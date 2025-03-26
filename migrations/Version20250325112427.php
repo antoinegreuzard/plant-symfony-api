@@ -7,26 +7,34 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 final class Version20250325112427 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Créer la table refresh_tokens';
     }
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE refresh_tokens (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, refresh_token VARCHAR(128) NOT NULL, username VARCHAR(255) NOT NULL, valid DATETIME NOT NULL)');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_9BACE7E1C74F2195 ON refresh_tokens (refresh_token)');
+        $table = $schema->createTable('refresh_tokens');
+
+        $table->addColumn('id', 'integer', [
+            'autoincrement' => true,
+        ]);
+        $table->addColumn('refresh_token', 'string', [
+            'length' => 128,
+        ]);
+        $table->addColumn('username', 'string', [
+            'length' => 255,
+        ]);
+        $table->addColumn('valid', 'datetime');
+
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['refresh_token'], 'UNIQ_9BACE7E1C74F2195');
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE refresh_tokens');
+        $schema->dropTable('refresh_tokens');
     }
 }
