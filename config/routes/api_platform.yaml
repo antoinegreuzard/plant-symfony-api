@@ -2,3 +2,11 @@ api_platform:
     resource: .
     type: api_platform
     prefix: /api
+    name_prefix: 'api_'
+    trailing_slash_on_root: false
+
+api_platform_endpoints_trailing_slash:
+    resource: .
+    type: api_platform
+    prefix: /api/
+    name_prefix: 'api_ts_'
