@@ -9,3 +9,4 @@ nelmio_cors:
         allow_credentials: true
     paths:
         '^/': ~
+        '^/api/': ~

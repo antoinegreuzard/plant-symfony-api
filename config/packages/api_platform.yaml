@@ -5,6 +5,7 @@ api_platform:
         json: ['application/json']
         jsonld: ['application/ld+json']
     docs_formats: []
+    trailing_slash: true
     defaults:
         format: json
         stateless: true
