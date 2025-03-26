@@ -31,10 +31,10 @@ jobs:
       - name: ⚙️ Copier le fichier .env
         run: cp .env.test .env
 
-      - name: 🗃️ Créer la base de données SQLite
+      - name: 🛠 Lancer les migrations et charger les fixtures
         run: |
-          mkdir -p var/data
-          touch var/data/database.sqlite
+          php bin/console doctrine:migrations:migrate --no-interaction
+          php bin/console doctrine:fixtures:load --no-interaction
 
       - name: 🔐 Générer les clés et configurations
         run: |
