@@ -4,16 +4,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/var/www
     ports:
       - "8000:8000"
+    volumes:
+      - .:/var/www
     depends_on:
       - db
     environment:
       APP_ENV: dev
       DATABASE_URL: mysql://symfony:symfony@db:3306/symfony?serverVersion=8.0
-    tty: true # ← pour garder le conteneur vivant
+    tty: true
 
   db:
     image: mysql:8.0
