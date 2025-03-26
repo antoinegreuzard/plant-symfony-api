@@ -26,4 +26,4 @@ RUN chown -R www-data:www-data /var/www
 
 EXPOSE 8000
 
-CMD ["symfony", "server:start", "--no-tls", "--allow-http", "--port=8000", "--dir=public", "--daemon"]
+CMD ["symfony", "serve", "--no-tls", "--dir=public", "--allow-http", "--port=8000", "--allow-all-ip"]
