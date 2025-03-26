@@ -105,7 +105,7 @@ Le projet utilise **PHPUnit** avec la surcouche **Pest**.
 ```bash
 php bin/phpunit
 # ou
-vendor/bin/pest
+vendor/bin/phpunit
 ```
 
 ---
@@ -114,7 +114,7 @@ vendor/bin/pest
 
 Le projet est configuré pour :
 
-- Lancer les tests (PHPUnit / Pest)
+- Lancer les tests (PHPUnit)
 - Vérifier les migrations
 - Vérifier le code avec PHPStan / Lint Symfony
 
