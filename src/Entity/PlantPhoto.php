@@ -2,12 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
 use App\Repository\PlantPhotoRepository;
-use App\State\PlantPhotoProvider;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,37 +11,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ApiResource(
-    operations: [
-        new GetCollection(),
-        new GetCollection(
-            uriTemplate: '/plants/{plantId}/photos',
-            uriVariables: [
-                'plantId' => new Link(
-                    fromProperty: 'photos',
-                    fromClass: Plant::class
-                ),
-            ],
-            normalizationContext: ['groups' => ['photo:read']],
-            provider: PlantPhotoProvider::class
-        ),
-        new Post(
-            uriTemplate: '/plants/{plantId}/upload-photo',
-            inputFormats: ['multipart' => ['multipart/form-data']],
-            uriVariables: [
-                'plantId' => new Link(
-                    fromProperty: 'photos',
-                    fromClass: Plant::class
-                ),
-            ],
-            normalizationContext: ['groups' => ['photo:read']],
-            denormalizationContext: ['groups' => ['photo:write']],
-        ),
-    ],
-    normalizationContext: ['groups' => ['photo:read']],
-    denormalizationContext: ['groups' => ['photo:write']],
-    paginationEnabled: false,
-)]
 #[ORM\Entity(repositoryClass: PlantPhotoRepository::class)]
 #[ORM\Table(name: 'plant_photo')]
 #[ORM\HasLifecycleCallbacks]

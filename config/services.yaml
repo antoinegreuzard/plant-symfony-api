@@ -1,52 +1,32 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
 
 services:
-    # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true
+        autoconfigure: true
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-    App\State\PlantStateProvider:
-        decorates: 'api_platform.doctrine.orm.state.item_provider'
-        arguments:
-            - '@App\State\PlantStateProvider.inner'
-            - '@App\Service\PlantAdviceService'
-    App\State\PlantPhotoProvider:
-        tags: ['api_platform.state_provider']
-    App\Serializer\PaginatedResponseNormalizer:
-        arguments:
-            $decorated: '@serializer.normalizer.object'
-        tags:
-            - { name: 'serializer.normalizer', priority: -100 }
+
+    # Normalizers (si tu continues à utiliser la sérialisation personnalisée)
     Symfony\Component\Serializer\Normalizer\DateTimeNormalizer: ~
     App\Serializer\SnakeCaseNormalizer:
         arguments:
             $normalizer: '@serializer.normalizer.object'
         tags:
             - { name: 'serializer.normalizer', priority: 10 }
-    App\Serializer\PlantPhotoNormalizer:
-        arguments:
-            $normalizer: '@serializer.normalizer.object'
-        tags:
-            - { name: 'serializer.normalizer', priority: 100 }
-    App\Security\AuthenticationSuccessHandler:
-            tags:
-                - { name: 'kernel.event_listener', event: lexik_jwt_authentication.on_authentication_success, method: __invoke }
-    App\DataPersister\PlantPhotoDataPersister:
-            tags: [ 'api_platform.state_processor' ]
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    # Événement auth JWT (si tu utilises toujours LexikJWTAuthenticationBundle)
+    App\Security\AuthenticationSuccessHandler:
+        tags:
+            - { name: 'kernel.event_listener', event: lexik_jwt_authentication.on_authentication_success, method: __invoke }
+
+    # Service de conseils (encore utilisé dans les contrôleurs)
+    App\Service\PlantAdviceService: ~
+    App\Service\Paginator:
+        arguments:
+            $router: '@router'
