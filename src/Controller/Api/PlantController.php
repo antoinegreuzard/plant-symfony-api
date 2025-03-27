@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Plant;
+use App\Service\Paginator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
