@@ -37,6 +37,13 @@ jobs:
           touch var/data/database.sqlite
           chmod -R 777 var/data
 
+      - name: 🔐 Générer les clés JWT
+        run: |
+          mkdir -p config/jwt
+          openssl genrsa -out config/jwt/private.pem 4096
+          openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+          chmod 600 config/jwt/private.pem
+
       - name: 🛠 Lancer les migrations et charger les fixtures
         run: |
           php bin/console doctrine:migrations:migrate --no-interaction --env=test
@@ -46,5 +53,6 @@ jobs:
         run: ./vendor/bin/phpunit
         env:
           APP_ENV: test
+          JWT_SECRET_KEY: '%kernel.project_dir%/config/jwt/private.pem'
           CORS_ALLOW_ORIGIN: ^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$
           DATABASE_URL: sqlite:///%kernel.project_dir%/var/data/database.sqlite
