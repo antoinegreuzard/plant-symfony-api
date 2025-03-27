@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/api/plants')]
 class PlantController extends AbstractController
 {
-    #[Route('', name: 'api_plants_list', methods: ['GET'])]
+    #[Route(['', '/'], name: 'api_plants_list', methods: ['GET'])]
     public function index(
         Request $request,
         EntityManagerInterface $em,
@@ -41,7 +41,7 @@ class PlantController extends AbstractController
         ]);
     }
 
-    #[Route('', methods: ['POST'])]
+    #[Route(['', '/'], methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
     {
         $plant = $serializer->deserialize($request->getContent(), Plant::class, 'json', ['groups' => 'plant:write']);
@@ -52,13 +52,13 @@ class PlantController extends AbstractController
         return $this->json($plant, 201, [], ['groups' => 'plant:read']);
     }
 
-    #[Route('/{id}', methods: ['GET'])]
+    #[Route(['/{id}', '/{id}/'], methods: ['GET'])]
     public function show(Plant $plant): JsonResponse
     {
         return $this->json($plant, 200, [], ['groups' => 'plant:read']);
     }
 
-    #[Route('/{id}', methods: ['PUT'])]
+    #[Route(['/{id}', '/{id}/'], methods: ['PUT'])]
     public function update(
         Request $request,
         Plant $plant,
@@ -75,7 +75,7 @@ class PlantController extends AbstractController
         return $this->json($plant, 200, [], ['groups' => 'plant:read']);
     }
 
-    #[Route('/{id}', methods: ['DELETE'])]
+    #[Route(['/{id}', '/{id}/'], methods: ['DELETE'])]
     public function delete(Plant $plant, EntityManagerInterface $em): JsonResponse
     {
         $em->remove($plant);

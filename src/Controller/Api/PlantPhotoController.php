@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/api/plants')]
 class PlantPhotoController extends AbstractController
 {
-    #[Route('/{id}/photos', name: 'api_plant_photos_list', methods: ['GET'])]
+    #[Route(['/{id}/photos', '/{id}/photos/'], name: 'api_plant_photos_list', methods: ['GET'])]
     public function listPhotosForPlant(
         Plant $plant,
         PlantPhotoRepository $photoRepo,
@@ -29,7 +29,7 @@ class PlantPhotoController extends AbstractController
         return new JsonResponse($json, 200, [], true);
     }
 
-    #[Route('/{id}/upload-photo', name: 'api_plant_photo_upload', methods: ['POST'])]
+    #[Route(['/{id}/upload-photo', '/{id}/upload-photo/'], name: 'api_plant_photo_upload', methods: ['POST'])]
     public function uploadPhotoForPlant(
         Plant $plant,
         Request $request,
