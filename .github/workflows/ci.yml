@@ -46,4 +46,5 @@ jobs:
         run: ./vendor/bin/phpunit
         env:
           APP_ENV: test
+          CORS_ALLOW_ORIGIN: ^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$
           DATABASE_URL: sqlite:///%kernel.project_dir%/var/data/database.sqlite
