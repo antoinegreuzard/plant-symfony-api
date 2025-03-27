@@ -43,8 +43,7 @@ class Plant
     public const array TYPE_CHOICES = ['indoor', 'outdoor', 'succulent', 'flower', 'tree'];
     public const array SUNLIGHT_CHOICES = ['low', 'medium', 'high'];
     public const array HUMIDITY_CHOICES = ['low', 'medium', 'high'];
-    #[Groups(['plant:read'])]
-    public array $advice = [];
+    private array $advice = [];
     #[Groups(['plant:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -149,6 +148,18 @@ class Plant
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    #[Groups(['plant:read'])]
+    #[ApiProperty(readable: true)]
+    public function getAdvice(): array
+    {
+        return $this->advice;
+    }
+
+    public function setAdvice(array $advice): void
+    {
+        $this->advice = $advice;
     }
 
     public function getName(): ?string

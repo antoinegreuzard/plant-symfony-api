@@ -20,7 +20,7 @@ readonly class PlantStateProvider implements ProviderInterface
         $result = $this->decorated->provide($operation, $uriVariables, $context);
 
         if ($result instanceof Plant) {
-            $result->advice = $this->adviceService->getPersonalizedAdvice($result);
+            $result->setAdvice($this->adviceService->getPersonalizedAdvice($result));
         }
 
         return $result;
