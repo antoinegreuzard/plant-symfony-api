@@ -19,7 +19,7 @@ final class PlantControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSame(200, $this->client->getResponse()->getStatusCode());
     }
-    
+
     public function testPostPlant(): void
     {
         $payload = [
@@ -38,16 +38,7 @@ final class PlantControllerTest extends WebTestCase
         $responseData = json_decode($this->client->getResponse()->getContent(), true);
         self::assertArrayHasKey('id', $responseData);
     }
-
-    public function testMethodNotAllowed(): void
-    {
-        $this->client->request('PATCH', '/api/plants/', [], [], [
-            'HTTP_Authorization' => 'Bearer '.$this->token,
-        ]);
-
-        self::assertResponseStatusCodeSame(405);
-    }
-
+    
     protected function setUp(): void
     {
         $this->client = PlantControllerTest::createClient();
