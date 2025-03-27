@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-final class Api/PlantControllerTest extends WebTestCase{
+final class PlantControllerTest extends WebTestCase
+{
     public function testIndex(): void
     {
         $client = static::createClient();

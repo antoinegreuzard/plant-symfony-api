@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/api/plants/')]
+#[Route('/api/plants')]
 class PlantController extends AbstractController
 {
     #[Route('', name: 'api_plants_list', methods: ['GET'])]
@@ -52,13 +52,13 @@ class PlantController extends AbstractController
         return $this->json($plant, 201, [], ['groups' => 'plant:read']);
     }
 
-    #[Route('{id}/', methods: ['GET'])]
+    #[Route('/{id}', methods: ['GET'])]
     public function show(Plant $plant): JsonResponse
     {
         return $this->json($plant, 200, [], ['groups' => 'plant:read']);
     }
 
-    #[Route('{id}/', methods: ['PUT'])]
+    #[Route('/{id}', methods: ['PUT'])]
     public function update(
         Request $request,
         Plant $plant,
@@ -75,7 +75,7 @@ class PlantController extends AbstractController
         return $this->json($plant, 200, [], ['groups' => 'plant:read']);
     }
 
-    #[Route('{id}/', methods: ['DELETE'])]
+    #[Route('/{id}', methods: ['DELETE'])]
     public function delete(Plant $plant, EntityManagerInterface $em): JsonResponse
     {
         $em->remove($plant);
