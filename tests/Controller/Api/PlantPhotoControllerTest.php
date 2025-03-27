@@ -64,7 +64,7 @@ final class PlantPhotoControllerTest extends WebTestCase
             'POST',
             '/api/plants/1/upload-photo/',
             ['caption' => 'Test caption'],
-            ['imageFile' => $file],
+            ['image' => $file],
             ['HTTP_Authorization' => 'Bearer '.$token]
         );
 

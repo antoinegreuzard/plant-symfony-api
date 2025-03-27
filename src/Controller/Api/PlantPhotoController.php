@@ -37,7 +37,7 @@ class PlantPhotoController extends AbstractController
         ValidatorInterface $validator
     ): JsonResponse {
         /** @var UploadedFile|null $imageFile */
-        $imageFile = $request->files->get('imageFile');
+        $imageFile = $request->files->get('image');
         $caption = $request->request->get('caption');
 
         if (!$imageFile) {
