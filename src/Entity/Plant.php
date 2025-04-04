@@ -70,6 +70,9 @@ class Plant
     #[Groups(['plant:read'])]
     #[ORM\OneToMany(targetEntity: PlantPhoto::class, mappedBy: 'plant')]
     private Collection $photos;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -90,6 +93,19 @@ class Plant
     public function __toString(): string
     {
         return $this->name ?? '';
+    }
+
+    #[Groups(['plant:read'])]
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     public function getCreatedAt(): ?DateTimeInterface
