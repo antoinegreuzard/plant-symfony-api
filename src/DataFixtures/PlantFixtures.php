@@ -6,6 +6,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Plant;
 use App\Entity\PlantPhoto;
+use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -20,13 +21,22 @@ class PlantFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $user = new User();
+        $user->setUsername('antoine.greuzard')
+            ->setEmail('antoine@example.com')
+            ->setRoles(['ROLE_USER']);
+
+        $hashedPassword = $this->hasher->hashPassword($user, 'secret123');
+        $user->setPassword($hashedPassword);
+
         $types = Plant::TYPE_CHOICES;
         $sunlights = Plant::SUNLIGHT_CHOICES;
         $humidities = Plant::HUMIDITY_CHOICES;
 
         for ($i = 1; $i <= 20; $i++) {
             $plant = new Plant();
-            $plant->setName("Plante $i")
+            $plant->setUser($user)
+                ->setName("Plante $i")
                 ->setVariety("Variété $i")
                 ->setPlantType($types[array_rand($types)])
                 ->setPurchaseDate(new DateTimeImmutable('-'.rand(0, 365).' days'))
