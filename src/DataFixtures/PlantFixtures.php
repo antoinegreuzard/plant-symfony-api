@@ -6,13 +6,15 @@ namespace App\DataFixtures;
 
 use App\Entity\Plant;
 use App\Entity\PlantPhoto;
+use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class PlantFixtures extends Fixture
+class PlantFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(private readonly KernelInterface $kernel)
     {
@@ -20,13 +22,17 @@ class PlantFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        /** @var User $user */
+        $user = $this->getReference('antoine_user', User::class);
+
         $types = Plant::TYPE_CHOICES;
         $sunlights = Plant::SUNLIGHT_CHOICES;
         $humidities = Plant::HUMIDITY_CHOICES;
 
         for ($i = 1; $i <= 20; $i++) {
             $plant = new Plant();
-            $plant->setName("Plante $i")
+            $plant->setUser($user)
+                ->setName("Plante $i")
                 ->setVariety("Variété $i")
                 ->setPlantType($types[array_rand($types)])
                 ->setPurchaseDate(new DateTimeImmutable('-'.rand(0, 365).' days'))
@@ -70,5 +76,10 @@ class PlantFixtures extends Fixture
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [UserFixtures::class];
     }
 }

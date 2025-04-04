@@ -27,6 +27,8 @@ class PlantController extends AbstractController
         $query = $em->createQueryBuilder()
             ->select('p')
             ->from(Plant::class, 'p')
+            ->where('p.user = :user')
+            ->setParameter('user', $this->getUser())
             ->orderBy('p.createdAt', 'DESC');
 
         $data = $paginator->paginate($query, $page, $limit, 'api_plants_list');
@@ -44,7 +46,10 @@ class PlantController extends AbstractController
     #[Route(['', '/'], methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
     {
+        $user = $this->getUser();
+
         $plant = $serializer->deserialize($request->getContent(), Plant::class, 'json', ['groups' => 'plant:write']);
+        $plant->setUser($user);
 
         $em->persist($plant);
         $em->flush();
@@ -55,6 +60,10 @@ class PlantController extends AbstractController
     #[Route(['/{id}', '/{id}/'], methods: ['GET'])]
     public function show(Plant $plant): JsonResponse
     {
+        if ($plant->getUser() !== $this->getUser()) {
+            return $this->json(['error' => 'Non autorisé'], 403);
+        }
+
         return $this->json($plant, 200, [], ['groups' => 'plant:read']);
     }
 
@@ -65,6 +74,10 @@ class PlantController extends AbstractController
         EntityManagerInterface $em,
         SerializerInterface $serializer
     ): JsonResponse {
+        if ($plant->getUser() !== $this->getUser()) {
+            return $this->json(['error' => 'Non autorisé'], 403);
+        }
+
         $serializer->deserialize($request->getContent(), Plant::class, 'json', [
             'object_to_populate' => $plant,
             'groups' => 'plant:write',
@@ -78,6 +91,10 @@ class PlantController extends AbstractController
     #[Route(['/{id}', '/{id}/'], methods: ['DELETE'])]
     public function delete(Plant $plant, EntityManagerInterface $em): JsonResponse
     {
+        if ($plant->getUser() !== $this->getUser()) {
+            return $this->json(['error' => 'Non autorisé'], 403);
+        }
+
         $em->remove($plant);
         $em->flush();
 
