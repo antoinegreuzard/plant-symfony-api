@@ -9,30 +9,21 @@ use App\Entity\PlantPhoto;
 use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class PlantFixtures extends Fixture
+class PlantFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function __construct(
-        private readonly KernelInterface $kernel,
-        private readonly UserPasswordHasherInterface $hasher
-    ) {
+    public function __construct(private readonly KernelInterface $kernel)
+    {
     }
 
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $user->setUsername('antoine.greuzard')
-            ->setEmail('antoine@example.com')
-            ->setRoles(['ROLE_USER']);
-
-        $hashedPassword = $this->hasher->hashPassword($user, 'secret123');
-        $user->setPassword($hashedPassword);
-
-        $manager->persist($user);
+        /** @var User $user */
+        $user = $this->getReference('antoine_user', User::class);
 
         $types = Plant::TYPE_CHOICES;
         $sunlights = Plant::SUNLIGHT_CHOICES;
@@ -85,5 +76,10 @@ class PlantFixtures extends Fixture
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [UserFixtures::class];
     }
 }
