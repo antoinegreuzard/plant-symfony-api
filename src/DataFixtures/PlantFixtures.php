@@ -32,6 +32,8 @@ class PlantFixtures extends Fixture
         $hashedPassword = $this->hasher->hashPassword($user, 'secret123');
         $user->setPassword($hashedPassword);
 
+        $manager->persist($user);
+
         $types = Plant::TYPE_CHOICES;
         $sunlights = Plant::SUNLIGHT_CHOICES;
         $humidities = Plant::HUMIDITY_CHOICES;
