@@ -4,7 +4,7 @@ namespace Entity;
 
 use App\Entity\Plant;
 use App\Entity\PlantPhoto;
-use DateTimeImmutable;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -32,13 +32,13 @@ class PlantPhotoTest extends TestCase
         $file = new File(__FILE__); // N'importe quel fichier pour le test
 
         $photo->setImageFile($file);
-        $this->assertInstanceOf(DateTimeImmutable::class, $photo->getUploadedAt());
+        $this->assertInstanceOf(DateTime::class, $photo->getUploadedAt());
     }
 
     public function testSetUploadedAtManually(): void
     {
         $photo = new PlantPhoto();
-        $date = new DateTimeImmutable('2025-03-26');
+        $date = new DateTime('2025-03-26');
 
         $photo->setUploadedAtManually($date);
         $this->assertSame($date, $photo->getUploadedAt());
@@ -51,7 +51,7 @@ class PlantPhotoTest extends TestCase
 
         $photo = new PlantPhoto();
         $photo->setPlant($plant);
-        $photo->setUploadedAtManually(new DateTimeImmutable('2025-03-26'));
+        $photo->setUploadedAtManually(new DateTime('2025-03-26'));
 
         $this->assertStringContainsString('Photo de Ficus - 2025-03-26', (string)$photo);
     }
