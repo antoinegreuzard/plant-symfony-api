@@ -8,7 +8,6 @@ use App\Entity\Plant;
 use App\Entity\PlantPhoto;
 use App\Entity\User;
 use DateTime;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -55,7 +54,7 @@ class PlantFixtures extends Fixture implements DependentFixtureInterface
             $photo = new PlantPhoto();
             $photo->setPlant($plant)
                 ->setCaption("Photo de la plante $i");
-            $photo->setUploadedAtManually(new DateTimeImmutable());
+            $photo->setUploadedAtManually(new DateTime());
 
             // Copie une image dummy (à créer si besoin)
             $filesystem = new Filesystem();
