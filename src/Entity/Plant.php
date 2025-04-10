@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PlantRepository;
 use DateInterval;
-use DateTimeImmutable;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -44,7 +44,7 @@ class Plant
     private ?string $description = null;
     #[Groups(['plant:read'])]
     #[ORM\Column(type: 'datetime')]
-    private ?DateTimeInterface $createdAt = null;
+    private ?DateTime $createdAt = null;
     #[ORM\Column(type: 'integer')]
     private int $wateringFrequency = 7;
     #[ORM\Column(type: 'integer')]
@@ -87,7 +87,7 @@ class Plant
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = new DateTime();
     }
 
     public function __toString(): string

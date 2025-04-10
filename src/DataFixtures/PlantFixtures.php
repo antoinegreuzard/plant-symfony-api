@@ -7,7 +7,7 @@ namespace App\DataFixtures;
 use App\Entity\Plant;
 use App\Entity\PlantPhoto;
 use App\Entity\User;
-use DateTimeImmutable;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -35,17 +35,17 @@ class PlantFixtures extends Fixture implements DependentFixtureInterface
                 ->setName("Plante $i")
                 ->setVariety("Variété $i")
                 ->setPlantType($types[array_rand($types)])
-                ->setPurchaseDate(new DateTimeImmutable('-'.rand(0, 365).' days'))
+                ->setPurchaseDate(new DateTime('-'.rand(0, 365).' days'))
                 ->setLocation("Emplacement $i")
                 ->setDescription("Ceci est une description pour la plante $i.")
                 ->setWateringFrequency(rand(3, 10))
                 ->setFertilizingFrequency(rand(20, 60))
                 ->setRepottingFrequency(rand(180, 400))
                 ->setPruningFrequency(rand(60, 180))
-                ->setLastWatering(new DateTimeImmutable('-'.rand(1, 7).' days'))
-                ->setLastFertilizing(new DateTimeImmutable('-'.rand(1, 30).' days'))
-                ->setLastRepotting(new DateTimeImmutable('-'.rand(1, 365).' days'))
-                ->setLastPruning(new DateTimeImmutable('-'.rand(1, 90).' days'))
+                ->setLastWatering(new DateTime('-'.rand(1, 7).' days'))
+                ->setLastFertilizing(new DateTime('-'.rand(1, 30).' days'))
+                ->setLastRepotting(new DateTime('-'.rand(1, 365).' days'))
+                ->setLastPruning(new DateTime('-'.rand(1, 90).' days'))
                 ->setSunlightLevel($sunlights[array_rand($sunlights)])
                 ->setHumidityLevel($humidities[array_rand($humidities)])
                 ->setTemperature(rand(15, 28));
@@ -54,7 +54,7 @@ class PlantFixtures extends Fixture implements DependentFixtureInterface
             $photo = new PlantPhoto();
             $photo->setPlant($plant)
                 ->setCaption("Photo de la plante $i");
-            $photo->setUploadedAtManually(new DateTimeImmutable());
+            $photo->setUploadedAtManually(new DateTime());
 
             // Copie une image dummy (à créer si besoin)
             $filesystem = new Filesystem();
