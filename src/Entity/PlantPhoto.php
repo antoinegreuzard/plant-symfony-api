@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PlantPhotoRepository;
-use DateTimeImmutable;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -99,7 +99,7 @@ class PlantPhoto
         return $this;
     }
 
-    public function setUploadedAtManually(?DateTimeInterface $uploadedAt): static
+    public function setUploadedAtManually(?DateTime $uploadedAt): static
     {
         $this->uploadedAt = $uploadedAt;
 
@@ -117,7 +117,7 @@ class PlantPhoto
 
         if ($imageFile !== null) {
             // 🟡 Mise à jour de la date si on change le fichier
-            $this->uploadedAt = new DateTimeImmutable();
+            $this->uploadedAt = new DateTime();
         }
 
         return $this;
