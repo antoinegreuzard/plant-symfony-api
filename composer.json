@@ -23,7 +23,7 @@
     "symfony/expression-language": "7.3.2",
     "symfony/flex": "^2.5",
     "symfony/form": "7.3.4",
-    "symfony/framework-bundle": "7.2.*",
+    "symfony/framework-bundle": "7.3.3",
     "symfony/http-foundation": "7.3.2",
     "symfony/mime": "7.3.4",
     "symfony/property-access": "7.3.3",
