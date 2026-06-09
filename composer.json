@@ -28,7 +28,7 @@
     "symfony/mime": "7.4.13",
     "symfony/property-access": "7.3.3",
     "symfony/property-info": "7.3.5",
-    "symfony/runtime": "7.3.4",
+    "symfony/runtime": "7.4.13",
     "symfony/security-bundle": "7.3.4",
     "symfony/serializer": "7.3.5",
     "symfony/twig-bundle": "7.3.4",
